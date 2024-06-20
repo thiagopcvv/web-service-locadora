@@ -38,4 +38,8 @@ class Modelo extends Model
             'boolean' => 'O campo :attribute deve ser verdadeiro ou falso'
         ];
     }
+
+    public function marcas(){
+        return $this->belongsTo(Marca::class);
+    }
 }

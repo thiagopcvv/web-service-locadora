@@ -20,7 +20,7 @@ class ModeloController extends Controller
      */
     public function index()
     {
-        $modelo = $this->modelo->all();
+        $modelo = $this->modelo->with('marcas')->get();
         return $modelo;
     }
 
@@ -57,7 +57,7 @@ class ModeloController extends Controller
      */
     public function show($id)
     {
-        $modelo = $this->modelo->find($id);
+        $modelo = $this->modelo->with('marcas')->find($id);
 
         if ($modelo === null) {
             return response()->json(["Erro" => "recurso não encontrado"], 404);
@@ -75,7 +75,7 @@ class ModeloController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $modelo = $this->modelo->find($id);
+        $modelo = $this->modelo->with('marcas')->find($id);
         if ($modelo === null) {
             return response()->json(["Erro" => "recurso não encontrado"], 404);
         }
@@ -142,7 +142,7 @@ class ModeloController extends Controller
      */
     public function destroy($id)
     {
-        $modelo = $this->modelo->find($id);
+        $modelo = $this->modelo->with('marcas')->find($id);
         if ($modelo === null) {
             return response()->json(["Erro" => "recurso não encontrado"], 404);
         }

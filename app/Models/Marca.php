@@ -9,7 +9,7 @@ class Marca extends Model
 {
     use HasFactory;
     protected $fillable = ["nome", "imagem"];
-    
+
     public function rules()
     {
         return [
@@ -25,5 +25,10 @@ class Marca extends Model
             "nome.unique" => "Essa marca ja é existente",
             "mimes" => "Esse tipo de arquivo não é compatível, apenas png, jpg"
         ];
+    }
+
+    public function modelos()
+    {
+        return $this->hasMany(Modelo::class);
     }
 }
