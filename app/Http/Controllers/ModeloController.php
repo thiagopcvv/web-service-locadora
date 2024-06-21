@@ -18,10 +18,16 @@ class ModeloController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $modelo = $this->modelo->with('marcas')->get();
-        return $modelo;
+        $modelos = array();
+        if($request->has('atributos')){
+            $atributos = $request->atributos;
+            $modelos = $this->modelo->selectRaw($atributos)->get();
+        } else {
+            $modelos = $this->modelo->with('marcas')->get();
+        }
+        return $modelos;
     }
 
     /**
