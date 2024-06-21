@@ -13,7 +13,7 @@ class ModeloController extends Controller
 
     public function __construct(Modelo $modelo)
     {
-        $this->modelo = $modelo;   
+        $this->modelo = $modelo;
     }
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class ModeloController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-  
+
     /**
      * Store a newly created resource in storage.
      */
@@ -47,9 +47,8 @@ class ModeloController extends Controller
             "air_bag" => $request->air_bag,
             "abs" => $request->abs
         ]);
-        
-        return $modelo;
 
+        return $modelo;
     }
 
     /**
@@ -94,45 +93,27 @@ class ModeloController extends Controller
             if ($request->file('imagem')) {
                 Storage::disk('public')->delete($modelo->imagem);
             }
-
-            if ($request->nome == null) {
-                $image = $request->file('imagem');
-                $imagem_urn = $image->store('imagens', 'public');
-                $modelo->update([
-                    "imagem" => $imagem_urn
-                ]);
-
-                return $modelo;
-            }
-
-            if ($request->file('imagem') == null) {
-                $modelo->update([
-                    "nome" => $request->nome
-                ]);
-
-                return $modelo;
-            }
         } else {
 
             $request->validate($modelo->rules(), $modelo->feedback());
         }
 
+        $img = false;
+
         if ($request->file('imagem')) {
             Storage::disk('public')->delete($modelo->imagem);
+            $image = $request->file('imagem');
+            $imagem_urn = $image->store('imagens', 'public');
+            $img = true;
         }
 
-        $image = $request->file('imagem');
-        $imagem_urn = $image->store('imagens', 'public');
+        $modelo->fill($request->all());
 
-        $modelo->update([
-            "marca_id" => $request->marca_id,
-            "nome" => $request->nome,
-            "imagem" => $imagem_urn,
-            "numero_portas" => $request->numero_portas,
-            "lugares" => $request->lugares,
-            "air_bag" => $request->air_bag,
-            "abs" => $request->abs
-        ]);
+        if ($img) {
+            $modelo->imagem = $imagem_urn;
+        }
+
+        $modelo->save();
 
         return $modelo;
     }
