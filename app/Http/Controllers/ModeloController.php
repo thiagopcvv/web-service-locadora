@@ -21,9 +21,10 @@ class ModeloController extends Controller
     public function index(Request $request)
     {
         $modelos = array();
-        if($request->has('atributos')){
+        if ($request->has('atributos')) {
             $atributos = $request->atributos;
-            $modelos = $this->modelo->selectRaw($atributos)->get();
+            $atributos_marcas = $request->atributos_marcas;
+            $modelos = $this->modelo->selectRaw($atributos)->witth('marcas:id,'. $atributos_marcas)->get();
         } else {
             $modelos = $this->modelo->with('marcas')->get();
         }
