@@ -22,9 +22,18 @@ class MarcaController extends Controller
     public function index(Request $request)
     {
         $marca = array();
-        if($request->has('atributos')){
+
+        if ($request->has('atributos_modelos')) {
             $atributos = $request->atributos;
-            $marca = $this->marca->selectRaw($atributos, )->get();
+            $atributos_modelos = $request->atributos_modelos;
+            $marca = $this->marca->with('modelos:id,' . $atributos_modelos);
+        } else {
+            $marca = $this->marca->with('modelos');
+        }
+
+        if ($request->has('atributos')) {
+            $atributos = $request->atributos;
+            $marca = $marca->selectRaw($atributos)->get();
         } else {
             $marca = $this->marca->with('modelos')->get();
         }
@@ -101,8 +110,8 @@ class MarcaController extends Controller
         }
 
         $marca->fill($request->all());
-        
-        if($img){
+
+        if ($img) {
             $marca->imagem = $imagem_urn;
         }
 
