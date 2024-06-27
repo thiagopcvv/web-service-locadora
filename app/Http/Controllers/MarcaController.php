@@ -36,13 +36,16 @@ class MarcaController extends Controller
             $marcaRepository->selectAtributosSelecionados('modelos');
         }
 
+        if ($request->has('filtro')) {
+            $marcaRepository->filtro($request->filtro);
+        }
+
         if ($request->has('atributos')) {
             $atributos = $request->atributos;
-            $marca = $marca->selectRaw($atributos)->get();
-        } else {
-            $marca = $this->marca->with('modelos')->get();
+            $marcaRepository->selectAtributos($atributos);
         }
-        return $marca;
+
+        return $marcaRepository->getReturn();
     }
 
 
