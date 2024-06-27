@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modelo;
+use App\Repositories\ModeloRepository as RepositoriesModeloRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use ModeloRepository;
 
 class ModeloController extends Controller
 {
@@ -21,7 +21,7 @@ class ModeloController extends Controller
      */
     public function index(Request $request)
     {
-        $modeloRepository =  new ModeloRepository($this->modelo);
+        $modeloRepository = new RepositoriesModeloRepository($this->modelo);
 
         if ($request->has('atributos_marcas')) {
 
