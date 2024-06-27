@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Repositories;
-
 use Illuminate\Database\Eloquent\Model;
 
-class MarcaRepository
+class ModeloRepository
 {
-
     protected $model;
 
     public function __construct(Model $model)
@@ -16,7 +13,7 @@ class MarcaRepository
 
     public function selectAtributosSelecionados($atributos)
     {
-        $this->model = $this->model->with($atributos);
+        $this->model = $this->model->with('marcas:id,' . $atributos);
     }
 
     public function selectAtributos($atributos)
@@ -27,15 +24,5 @@ class MarcaRepository
     public function getReturn()
     {
         return $this->model->get();
-    }
-
-    public function filtro($filtro)
-    {
-        $filtros = explode(';', $filtro);
-
-        foreach ($filtros as $key => $cond) {
-            $c = explode(':', $cond);
-            $this->model = $this->model->where($c[0], $c[1], $c[2]);
-        }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Modelo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use ModeloRepository;
 
 class ModeloController extends Controller
 {
@@ -20,21 +21,20 @@ class ModeloController extends Controller
      */
     public function index(Request $request)
     {
-        $modelos = array();
+        $modeloRepository =  new ModeloRepository($this->modelo);
+
         if ($request->has('atributos_marcas')) {
 
             $atributos_marcas = $request->atributos_marcas;
-            $modelos = $this->modelo->with('marcas:id,' . $atributos_marcas);
+            $modeloRepository->selectAtributosSelecionados($atributos_marcas);
         } else {
-            $modelos = $this->modelo->with('marcas');
+            $modeloRepository->selectAtributosSelecionados('marcas');
         }
         if ($request->has('atributos')) {
             $atributos = $request->atributos;
-            $modelos = $modelos->selectRaw($atributos)->get();
-        } else {
-            $modelos = $modelos->get();
+            $modeloRepository->selectAtributos($atributos);
         }
-        return $modelos;
+        return $modeloRepository->getReturn();
     }
 
     /**
