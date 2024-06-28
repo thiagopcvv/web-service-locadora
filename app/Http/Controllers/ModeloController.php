@@ -23,6 +23,13 @@ class ModeloController extends Controller
     {
         $modeloRepository = new RepositoriesModeloRepository($this->modelo);
 
+        if ($request->has('atributos_carro')) {
+            $atributos_carro = 'carros:id,'.$request->atributos_marcas;
+            $modeloRepository->selectAtributosSelecionados($atributos_carro);
+        } else {
+            $modeloRepository->selectAtributosSelecionados("carros");
+        }
+
         if ($request->has('atributos_marcas')) {
 
             $atributos_marcas = $request->atributos_marcas;

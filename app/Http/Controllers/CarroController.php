@@ -25,7 +25,7 @@ class CarroController extends Controller
         $carroRepository = new CarroRepository($this->carro);
 
         if ($request->has('atributos_modelo')) {
-            $atributos_modelo = $request->atributos_modelo;
+            $atributos_modelo = 'modelos:modelo_id,'.$request->atributos_modelo;
             $carroRepository->selectAtributosSelecionados($atributos_modelo);
         } else {
             $carroRepository->selectAtributosSelecionados('modelos');
@@ -50,7 +50,7 @@ class CarroController extends Controller
     {
 
         $request->validate($this->carro->rules());
-                
+
         $carro = $this->carro->create([
             "modelo_id" => $request->modelo_id,
             "placa" => $request->placa,
@@ -66,7 +66,7 @@ class CarroController extends Controller
      */
     public function show($id)
     {
-        $carro = $this->carro->with('modelo')->find($id);
+        $carro = $this->carro->with('modelos')->find($id);
 
         if ($carro === null) {
             return response()->json(["Erro" => "recurso não encontrado", 404]);
@@ -82,9 +82,9 @@ class CarroController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCarroRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $carro = $this->carro->with('modelo')->find($id);
+        $carro = $this->carro->with('modelos')->find($id);
 
         if ($carro === null) {
             return response()->json(["Erro" => "recurso não encontrado", 404]);
@@ -104,6 +104,8 @@ class CarroController extends Controller
             $request->validate($this->carro->rules());
         }
 
+        $carro->fill($request->all());
+
         $carro->save();
 
         return $carro;
@@ -114,7 +116,7 @@ class CarroController extends Controller
      */
     public function destroy($id)
     {
-        $carro = $this->carro->with('modelo')->find($id);
+        $carro = $this->carro->with('modelos')->find($id);
 
         if ($carro === null) {
             return response()->json(["Erro" => "recurso não encontrado", 404]);
