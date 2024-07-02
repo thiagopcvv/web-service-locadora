@@ -9,9 +9,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         // $request->validate(["email" => "required", "senha" => "required"]);
-
         $credenciais = $request->all(['email', 'password']);
- 
+
         if (!$token = auth('api')->attempt($credenciais)) {
             return response()->json(['error' => 'Sem autorização'], 401);
         }
@@ -20,14 +19,17 @@ class AuthController extends Controller
     }
     public function logout()
     {
-        return 'logout';
+        auth('api')->logout();
+        return response()->json(["msg" => "logout feito com sucesso"] );
     }
     public function refresh()
     {
-        return 'refresh';
+        
+        $token = auth('api')->refresh(); // Obtém um novo token JWT válido
+        return response()->json(['token' => $token], 200);
     }
     public function me()
     {
-        return 'me';
+        return response()->json((auth()->user()));
     }
 }
